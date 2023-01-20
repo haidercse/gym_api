@@ -20,7 +20,7 @@ class CreateMembersTable extends Migration
             $table->tinyInteger('gender');
             $table->string('mobile_number',11)->unique();
             $table->enum('blood',['A+','AB+','B+','AB-','B-','O+','O-','A-']);
-            $table->text('address');
+            $table->text('address')->nullable();
             $table->string('image',100);
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

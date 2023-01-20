@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
+use Exception;
 class InvoiceController extends Controller
 {
     /**
@@ -12,9 +14,15 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $perPage = $request->page ? $request->page : 10;
+        try {
+            $data = Invoice::with(['user','member'])->paginate($perPage);
+            return $this->successResponse($data, 'All Invoice Data get Successfully');
+        } catch (Exception $e) {
+            return $this->errorResponse(null, $e->getMessage(), JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -36,7 +44,17 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $data = Invoice::with(['user','member'])->find($id);
+            if (empty($data)) {
+                return $this->errorResponse(null, 'This data is not found.', JsonResponse::HTTP_NOT_FOUND);
+            }
+
+            return $this->successResponse($data, 'data Get Successfully');
+
+        } catch (Exception $e) {
+            return $this->errorResponse(null, $e->getMessage(), JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

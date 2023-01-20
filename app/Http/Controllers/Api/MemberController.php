@@ -25,7 +25,7 @@ class MemberController extends Controller
     {
         $perPage = $request->page ? $request->page : 10;
         try {
-            $members = Member::paginate($perPage);
+            $members = Member::with(['user','invoices'])->paginate($perPage);
             return $this->successResponse($members, 'Member Data get Successfully');
         } catch (Exception $e) {
             return $this->errorResponse(null, $e->getMessage(), JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
@@ -77,8 +77,7 @@ class MemberController extends Controller
                 'create_by' => auth()->id(),
             ]);
 
-            // $member->member_id = date('Y') . str_pad($member->id, 6, 0, STR_PAD_LEFT);
-
+           
             $member->update([
                 'member_id' => date('Y') . str_pad($member->id, 6, 0, STR_PAD_LEFT),
             ]);
@@ -101,7 +100,7 @@ class MemberController extends Controller
     public function show($id)
     {
         try {
-            $member = Member::find($id);
+            $member = Member::with(['user','invoices'])->find($id);
             if (empty($member)) {
                 return $this->errorResponse(null, 'This member is not found.', JsonResponse::HTTP_NOT_FOUND);
             }

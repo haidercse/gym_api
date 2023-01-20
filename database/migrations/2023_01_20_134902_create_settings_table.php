@@ -20,8 +20,8 @@ class CreateSettingsTable extends Migration
             $table->string('favicon', 100);
             $table->string('email', 100);
             $table->string('mobile', 11);
-            $table->string('fb_link');
-            $table->string('youtube_link');
+            $table->string('fb_link')->nullable();
+            $table->string('youtube_link')->nullable();
             $table->unsignedBigInteger('create_by');
             $table->timestamps();
 

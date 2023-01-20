@@ -23,7 +23,9 @@ Route::prefix('v1')->group(function(){
 
      Route::group(['middleware'=> 'auth:api'],function(){
         Route::apiResources([
-         'member'=> MemberController::class
+         'member'=> MemberController::class,
+         'invoice'=> MemberController::class,
+         'expense'=> MemberController::class,
         ]);
      });
 });

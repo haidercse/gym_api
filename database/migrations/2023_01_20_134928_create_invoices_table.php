@@ -23,7 +23,7 @@ class CreateInvoicesTable extends Migration
             $table->tinyInteger('fee_type');
             $table->unsignedBigInteger('payment_type');
             $table->timestamps();
-
+            $table->softDeletes();
             $table->foreign('member_id')->references('member_id')->on('members');
             $table->foreign('create_by')->references('id')->on('users');
         });

@@ -21,7 +21,8 @@ class CreateExpensesTable extends Migration
             $table->decimal('amount');
             $table->tinyInteger('type');
             $table->timestamps();
-
+            $table->softDeletes();
+            
             $table->foreign('create_by')->references('id')->on('users');
         });
     }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ExpenseController;
+use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\MemberController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,8 +26,8 @@ Route::prefix('v1')->group(function(){
      Route::group(['middleware'=> 'auth:api'],function(){
         Route::apiResources([
          'member'=> MemberController::class,
-         'invoice'=> MemberController::class,
-         'expense'=> MemberController::class,
+         'invoice'=> InvoiceController::class,
+         'expense'=> ExpenseController::class,
         ]);
      });
 });

@@ -43,7 +43,7 @@ class ExpenseController extends Controller
                 [
                     'title' => 'required|max:200',
                     'amount' => 'required',
-                    'date' => 'required',
+                    'date' => 'required|date_format:Y-m-d',
                     'type' => 'required',
 
                 ]
@@ -113,7 +113,7 @@ class ExpenseController extends Controller
                 [
                     'title' => 'required|max:200',
                     'amount' => 'required',
-                    'date' => 'required',
+                    'date' => 'required|date_format:Y-m-d',
                     'type' => 'required',
                 ]
             );

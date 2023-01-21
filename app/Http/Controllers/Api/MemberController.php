@@ -49,8 +49,8 @@ class MemberController extends Controller
                     'mobile_number' => 'required|unique:members,mobile_number|max:11',
                     'address' => 'nullable',
                     'image' => 'required',
-                    'start_date' => 'nullable',
-                    'end_date' => 'nullable',
+                    'start_date' => 'nullable|date_format:Y-m-d',
+                    'end_date' => 'nullable|date_format:Y-m-d',
                 ]
             );
             if ($validateMember->fails()) {
@@ -136,8 +136,8 @@ class MemberController extends Controller
                     'gender' => 'required',
                     'mobile_number' => 'required|max:11|unique:members,mobile_number,' . $id,
                     'address' => 'nullable',
-                    'start_date' => 'nullable',
-                    'end_date' => 'nullable',
+                    'start_date' => 'nullable|date_format:Y-m-d',
+                    'end_date' => 'nullable|date_format:Y-m-d',
                 ]
             );
             if ($validateMember->fails()) {

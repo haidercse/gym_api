@@ -23,7 +23,10 @@ class Member extends Model
         'card_no',
         'status'
     ];
-
+    protected $casts = [
+        'start_date' => 'date:Y-m-d',
+        'end_date' => 'date:Y-m-d',
+    ];
     /**
      * Get the user that owns the Member
      *

@@ -42,8 +42,8 @@ class InvoiceController extends Controller
                 $request->all(),
                 [
                     'member_id' => 'required',
-                    'start_date' => 'required',
-                    'end_date' => 'required',
+                    'start_date' => 'required|date_format:Y-m-d',
+                    'end_date' => 'required|date_format:Y-m-d',
                     'amount' => 'required',
                     'fee_type' => 'required',
                     'payment_type' => 'required',
@@ -116,8 +116,8 @@ class InvoiceController extends Controller
                 $request->all(),
                 [
                     'member_id' => 'required',
-                    'start_date' => 'required',
-                    'end_date' => 'required',
+                    'start_date' => 'required|date_format:Y-m-d',
+                    'end_date' => 'required|date_format:Y-m-d',
                     'amount' => 'required',
                     'fee_type' => 'required',
                     'payment_type' => 'required',

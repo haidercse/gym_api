@@ -32,7 +32,7 @@ class AuthController extends Controller
             
             if (!Auth::attempt($request->only(['email', 'password']))) {
                 return response()->json([
-                    'status' => false,
+                    'status' => 'error',
                     'message' => 'Email & Password does not match with our record.',
                 ], 422);
             }

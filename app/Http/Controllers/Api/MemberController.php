@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MemberCollection;
 use App\Models\Member;
 use App\Services\ImageUpload;
 use App\Services\ResponseTrait;
@@ -25,8 +26,13 @@ class MemberController extends Controller
     {
         $perPage = $request->page ? $request->page : 10;
         try {
-            $members = Member::with(['user','invoices'])->paginate($perPage);
-            return $this->successResponse($members, 'Member Data get Successfully');
+            $members = Member::with(['user', 'invoices'])
+                ->orderBy('id', 'desc')
+                ->paginate($perPage);
+
+            // return $this->successResponse($members, 'Member Data get Successfully');
+            return new MemberCollection($members);
+            
         } catch (Exception $e) {
             return $this->errorResponse(null, $e->getMessage(), JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -40,6 +46,7 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
+
         try {
             $validateMember = Validator::make(
                 $request->all(),
@@ -62,10 +69,19 @@ class MemberController extends Controller
             }
 
             #image 
-            if ($request->hasFile('image')) {
-                $reImage = ImageUpload::upload($request, 'image', 'images/member');
+            if ($request->has('image')) {
+                $file = ImageUpload::upload($request, 'image', 'images/member');
             }
+            // if ($request->image) {
+            //     $folderPath =  public_path()."/images/member/";
+            //     $base64Image = explode(";base64,", $request->image);
+            //     $explodeImage = explode("image/", $base64Image[0]);
+            //     $imageType = $explodeImage[1];
+            //     $image_base64 = base64_decode($base64Image[1]);
 
+            //     $file = $folderPath . uniqid() . '. '.$imageType;
+            //     file_put_contents($file, $image_base64);
+            // }
             $member = Member::create([
                 'member_id' => uniqid(),
                 'name' => $request->name,
@@ -73,11 +89,11 @@ class MemberController extends Controller
                 'mobile_number' => $request->mobile_number,
                 'blood' => $request->blood,
                 'address' => $request->address,
-                'image' => $reImage,
+                'image' => $file,
                 'create_by' => auth()->id(),
             ]);
 
-           
+
             $member->update([
                 'member_id' => date('Y') . str_pad($member->id, 6, 0, STR_PAD_LEFT),
             ]);
@@ -100,7 +116,7 @@ class MemberController extends Controller
     public function show($id)
     {
         try {
-            $member = Member::with(['user','invoices'])->find($id);
+            $member = Member::with(['user', 'invoices'])->find($id);
             if (empty($member)) {
                 return $this->errorResponse(null, 'This member is not found.', JsonResponse::HTTP_NOT_FOUND);
             }
@@ -150,12 +166,12 @@ class MemberController extends Controller
 
 
             #image 
-            $old_image_path_exist = 'images/member/'.$member->image;
-            if($request->hasFile('image')){
-                if(File::exists($old_image_path_exist)){
+            $old_image_path_exist = 'images/member/' . $member->image;
+            if ($request->hasFile('image')) {
+                if (File::exists($old_image_path_exist)) {
                     File::delete($old_image_path_exist);
                 }
-                $reImage =  ImageUpload::upload($request,'image','images/member');
+                $reImage = ImageUpload::upload($request, 'image', 'images/member');
             }
 
             $member->update([
@@ -198,7 +214,7 @@ class MemberController extends Controller
                 return $this->errorResponse(null, 'Failed To delete Member.', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-            return $this->successResponse($member, 'member Deleted Successfully');
+            return $this->successResponse($member, 'Member Deleted Successfully');
 
         } catch (Exception $e) {
             return $this->errorResponse(null, $e->getMessage(), JsonResponse::HTTP_INTERNAL_SERVER_ERROR);

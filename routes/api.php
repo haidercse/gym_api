@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::get('members',[MemberController::class,'index']);
 
 Route::prefix('v1')->group(function(){
      Route::post('auth/login',[AuthController::class,'login'])->name('auth.login');

@@ -4,7 +4,7 @@ namespace App\Services;
 
 class ImageUpload
 {
-
+   
     public static function upload($request, $fileName, $publicPath)
     {
 

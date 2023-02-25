@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MemberStoreRequest;
 use App\Http\Resources\MemberCollection;
 use App\Models\Member;
 use App\Services\ImageUpload;
@@ -44,44 +45,34 @@ class MemberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MemberStoreRequest $request)
     {
-
         try {
-            $validateMember = Validator::make(
-                $request->all(),
-                [
-                    'name' => 'required|max:50',
-                    'gender' => 'required',
-                    'mobile_number' => 'required|unique:members,mobile_number|max:11',
-                    'address' => 'nullable',
-                    'image' => 'required',
-                    'start_date' => 'nullable|date_format:Y-m-d',
-                    'end_date' => 'nullable|date_format:Y-m-d',
-                ]
-            );
-            if ($validateMember->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $validateMember->errors(),
-                ], 422);
-            }
+            // $validateMember = Validator::make(
+            //     $request->all(),
+            //     [
+            //         'name' => 'required|max:50',
+            //         'gender' => 'required',
+            //         'mobile_number' => 'required|unique:members,mobile_number|max:11',
+            //         'address' => 'nullable',
+            //         'image' => 'required',
+            //         'start_date' => 'nullable|date_format:Y-m-d',
+            //         'end_date' => 'nullable|date_format:Y-m-d',
+            //     ]
+            // );
+            // if ($validateMember->fails()) {
+            //     return response()->json([
+            //         'status' => false,
+            //         'message' => 'validation error',
+            //         'errors' => $validateMember->errors(),
+            //     ], 422);
+            // }
 
             #image 
             if ($request->has('image')) {
                 $file = ImageUpload::upload($request, 'image', 'images/member');
             }
-            // if ($request->image) {
-            //     $folderPath =  public_path()."/images/member/";
-            //     $base64Image = explode(";base64,", $request->image);
-            //     $explodeImage = explode("image/", $base64Image[0]);
-            //     $imageType = $explodeImage[1];
-            //     $image_base64 = base64_decode($base64Image[1]);
-
-            //     $file = $folderPath . uniqid() . '. '.$imageType;
-            //     file_put_contents($file, $image_base64);
-            // }
+            
             $member = Member::create([
                 'member_id' => uniqid(),
                 'name' => $request->name,

@@ -11,6 +11,7 @@ class MemberCollection extends ResourceCollection
         return [
             'data' => $this->collection->map(function ($data) {
                 return [
+                    'id' => $data->id,
                     'member_id' => $data->member_id,
                     'name' => $data->name,
                     'gender' => $data->gender,

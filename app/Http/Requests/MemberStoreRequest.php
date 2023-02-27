@@ -2,13 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Services\ResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-
+use Illuminate\Validation\ValidationException;
 
 class MemberStoreRequest extends FormRequest
 {
+    use ResponseTrait;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -40,6 +42,8 @@ class MemberStoreRequest extends FormRequest
    
     protected function failedValidation(Validator $validator)
     {
-        throw (new ValidationException($validator));
+        throw new HttpResponseException(
+            $this->errorResponse((new ValidationException($validator))->errors())
+        );
     }
 }

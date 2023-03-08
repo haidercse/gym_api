@@ -50,26 +50,6 @@ class MemberController extends Controller
     public function store(MemberStoreRequest $request) 
     {
         try {
-            // $validateMember = Validator::make(
-            //     $request->all(),
-            //     [
-            //         'name' => 'required|max:50',
-            //         'gender' => 'required',
-            //         'mobile_number' => 'required|unique:members,mobile_number|max:11',
-            //         'address' => 'nullable',
-            //         'image' => 'required',
-            //         'start_date' => 'nullable|date_format:Y-m-d',
-            //         'end_date' => 'nullable|date_format:Y-m-d',
-            //     ]
-            // );
-            // if ($validateMember->fails()) {
-            //     return response()->json([
-            //         'status' => false,
-            //         'message' => 'validation error',
-            //         'errors' => $validateMember->errors(),
-            //     ], 422);
-            // }
-
             #image 
             if ($request->has('image')) {
                 $file = ImageUpload::upload($request, 'image', 'images/member');
@@ -131,7 +111,7 @@ class MemberController extends Controller
      */
     public function update(Request $request, $id) 
     {
-
+       
         try {
             $member = Member::find($id);
             if (!$member) {
@@ -159,6 +139,7 @@ class MemberController extends Controller
 
 
             #image 
+            $reImage = '';
             $old_image_path_exist = 'images/member/' . $member->image;
             if ($request->hasFile('image')) {
                 if (File::exists($old_image_path_exist)) {
@@ -166,14 +147,17 @@ class MemberController extends Controller
                 }
                 $reImage = ImageUpload::upload($request, 'image', 'images/member');
             }
-
+            if($reImage == ''){
+                $reImage = $member->image;
+                
+            }
             $member->update([
                 'name' => $request->name,
                 'gender' => $request->gender,
                 'mobile_number' => $request->mobile_number,
                 'blood' => $request->blood,
                 'address' => $request->address,
-                'image' => $reImage ? $reImage : $member->image,
+                'image' => $reImage,
                 'create_by' => auth()->id(),
             ]);
 

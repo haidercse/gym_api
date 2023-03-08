@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MemberStoreRequest;
 use App\Http\Resources\MemberCollection;
+use App\Http\Resources\MemberResource;
 use App\Models\Member;
 use App\Services\ImageUpload;
 use App\Services\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,7 +25,7 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request) 
     {
         $perPage = $request->page ? $request->page : 10;
         try {
@@ -32,7 +34,7 @@ class MemberController extends Controller
                 ->paginate($perPage);
 
             // return $this->successResponse($members, 'Member Data get Successfully');
-            return new MemberCollection($members);
+            return new MemberCollection($members) ;
             
         } catch (Exception $e) {
             return $this->errorResponse(null, $e->getMessage(), JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
@@ -45,7 +47,7 @@ class MemberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(MemberStoreRequest $request)
+    public function store(MemberStoreRequest $request) 
     {
         try {
             // $validateMember = Validator::make(
@@ -104,7 +106,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id) 
     {
         try {
             $member = Member::with(['user', 'invoices'])->find($id);
@@ -112,7 +114,7 @@ class MemberController extends Controller
                 return $this->errorResponse(null, 'This member is not found.', JsonResponse::HTTP_NOT_FOUND);
             }
 
-            return $this->successResponse($member, 'member Deleted Successfully');
+            return new MemberResource($member);
 
         } catch (Exception $e) {
             return $this->errorResponse(null, $e->getMessage(), JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
@@ -127,7 +129,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id) 
     {
 
         try {
@@ -191,7 +193,7 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id) 
     {
         try {
             $member = Member::find($id);

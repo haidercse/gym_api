@@ -31,7 +31,7 @@ class MemberStoreRequest extends FormRequest
         return [
             'name' => 'required|max:50',
             'gender' => 'required',
-            'mobile_number' => 'required|unique:members,   mobile_number|max:11',
+            'mobile_number' => 'required|unique:members,mobile_number|max:11',
             'address' => 'nullable',
             'image' => 'required',
             'start_date' => 'nullable|date_format:Y-m-d',
